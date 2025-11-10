@@ -1,0 +1,51 @@
+# Payment System Requirements
+# Additional dependencies for payment processing
+
+# Stripe Integration
+stripe>=7.0.0
+
+# PayPal Integration  
+paypalrestsdk>=1.13.1
+
+# Security & Encryption
+cryptography>=41.0.0
+pycryptodome>=3.19.0
+
+# Database
+sqlalchemy>=2.0.0
+alembic>=1.12.0
+
+# API Framework
+flask>=2.3.0
+flask-cors>=4.0.0
+flask-restful>=0.3.10
+
+# Authentication
+pyjwt>=2.8.0
+bcrypt>=4.1.0
+
+# Email & Notifications
+sendgrid>=6.11.0
+twilio>=8.10.0
+
+# PDF Generation (Invoices)
+reportlab>=4.0.0
+weasyprint>=60.0
+
+# QR Code (Payment Links)
+qrcode>=7.4.2
+pillow>=10.1.0
+
+# Webhook Verification
+python-dateutil>=2.8.2
+
+# Rate Limiting
+flask-limiter>=3.5.0
+
+# Caching
+redis>=5.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-mock>=3.12.0
+faker>=20.0.0
