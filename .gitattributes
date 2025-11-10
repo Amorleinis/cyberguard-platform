@@ -1,0 +1,9 @@
+data/nvd/**/*.json filter=lfs diff=lfs merge=lfs -text
+data/cve/**/*.json filter=lfs diff=lfs merge=lfs -text
+data/ml_models/**/*.csv filter=lfs diff=lfs merge=lfs -text
+data/processed/**/*.csv filter=lfs diff=lfs merge=lfs -text
+data/nvd/further/*.csv filter=lfs diff=lfs merge=lfs -text
+data/nvd/processed/*.csv filter=lfs diff=lfs merge=lfs -text
+data/processed/UNSW-NB15/*.csv filter=lfs diff=lfs merge=lfs -text
+data/**/*.csv filter=lfs diff=lfs merge=lfs -text
+*.json filter=lfs diff=lfs merge=lfs -text

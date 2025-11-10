@@ -1,0 +1,140 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+.virtualenv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+data/logs/
+*.tmp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+threat_*.db
+
+# Quarantine (sensitive files)
+data/quarantine/
+
+# Large data files (keep structure, not content)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/nvd/*
+!data/processed/nvd/.gitkeep
+data/neo4j/*
+!data/neo4j/.gitkeep
+
+# Temporary files
+*.bak
+*.swp
+*.tmp
+.cache/
+.pytest_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Security - Don't commit sensitive data
+secrets/
+credentials/
+*.key
+*.pem
+*.crt
+
+# Build artifacts
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Backups
+*.bak
+*.backup
+*~
+
+# Keep these directories but not their contents
+data/exports/*
+!data/exports/.gitkeep
+data/visualizations/*
+!data/visualizations/.gitkeep

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spectra-guardian-training
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spectra-guardian-training
+  template:
+    metadata:
+      labels:
+        app: spectra-guardian-training
+    spec:
+      containers:
+      - name: training
+        image: yourdockerhubusername/spectra_guardian:latest
+        command: ["python", "run_training.py"]
+        restartPolicy: OnFailure

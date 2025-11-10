@@ -1,0 +1,6 @@
+apiVersion: v2
+name: spectra-guardian
+description: Helm chart for Spectra Guardian GNN security system
+type: application
+version: 0.1.0
+appVersion: "latest"

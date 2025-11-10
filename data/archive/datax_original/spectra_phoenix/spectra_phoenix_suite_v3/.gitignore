@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pkl
+venv/
+.env
+/data/
+/mnt/data/
+*.zip
+*.egg-info
+.idea/
+.vscode/
+models/
+checkpoints/

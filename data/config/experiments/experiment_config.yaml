@@ -1,0 +1,18 @@
+# Example experiment configuration for GNN training pipeline
+neo4j:
+  uri: bolt://localhost:7687
+  user: neo4j
+  password: password
+
+gnn:
+  embedding_dimension: 64
+  walk_length: 80
+  walks_per_node: 10
+  epochs: 10
+
+features:
+  include_asset_criticality: true
+  include_vuln_count: true
+
+output:
+  keep_last_n_runs: 5  # Number of versioned output dirs to keep (older ones will be deleted)

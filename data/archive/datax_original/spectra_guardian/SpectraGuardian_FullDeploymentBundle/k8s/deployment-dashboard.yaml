@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spectra-guardian-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spectra-guardian-dashboard
+  template:
+    metadata:
+      labels:
+        app: spectra-guardian-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: yourdockerhubusername/spectra_guardian:latest
+        command: ["streamlit", "run", "spectra_guardian/dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
+        ports:
+        - containerPort: 8501

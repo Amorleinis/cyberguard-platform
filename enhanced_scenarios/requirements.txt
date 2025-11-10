@@ -1,0 +1,3 @@
+# Example Python dependencies
+flask
+requests

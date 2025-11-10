@@ -1,0 +1,19 @@
+# Threat Intelligence Platform - Package Manifest
+
+include README.md
+include LICENSE
+include architecture.md
+recursive-include intelligence *.py
+recursive-include prevention *.py
+recursive-include detection *.py
+recursive-include response *.py
+recursive-include isolation *.py
+recursive-include mitigation *.py
+recursive-include recovery *.py
+recursive-include orchestration *.py
+recursive-include tests *.py
+recursive-include docs *.md *.rst
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude *.db
+global-exclude .DS_Store

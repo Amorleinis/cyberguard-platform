@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  training:
+    build: .
+    container_name: spectra_guardian_training
+    command: python run_training.py
+    volumes:
+      - .:/app
+    restart: on-failure
+
+  dashboard:
+    build: .
+    container_name: spectra_guardian_dashboard
+    command: streamlit run spectra_guardian/dashboard.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    depends_on:
+      - training
+    restart: always

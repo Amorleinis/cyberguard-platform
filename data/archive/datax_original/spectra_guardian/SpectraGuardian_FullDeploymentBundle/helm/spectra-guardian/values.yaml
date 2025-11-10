@@ -1,0 +1,12 @@
+image:
+  repository: yourdockerhubusername/spectra_guardian
+  tag: latest
+
+training:
+  replicas: 1
+
+dashboard:
+  replicas: 1
+  service:
+    type: LoadBalancer
+    port: 8501
