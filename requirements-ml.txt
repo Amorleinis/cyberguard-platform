@@ -1,0 +1,12 @@
+# CyberGuard Enterprise - ML & Analytics Requirements
+# Install with: pip install -r requirements-ml.txt
+
+# Machine Learning
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# Analytics & Reporting
+reportlab>=4.0.0
+matplotlib>=3.7.0
+plotly>=5.17.0
+seaborn>=0.12.0

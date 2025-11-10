@@ -1,0 +1,12 @@
+# CyberGuard Enterprise - Performance Requirements
+# Install with: pip install -r requirements-performance.txt
+
+# Caching & Database
+redis>=5.0.0
+psycopg2-binary>=2.9.0
+
+# Task Queue
+celery>=5.3.0
+
+# Database ORM
+sqlalchemy>=2.0.0

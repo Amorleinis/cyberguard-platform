@@ -1,0 +1,189 @@
+# Docker Compose for CyberGuard Enterprise Platform
+# Production deployment with all services
+
+version: '3.8'
+
+services:
+  # Main application - Web Dashboard
+  dashboard:
+    build:
+      context: .
+      target: production
+    image: cyberguard/enterprise:2.0.0
+    container_name: cyberguard-dashboard
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=cyberguard
+      - POSTGRES_USER=cyberguard
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - cyberguard-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # REST API Server
+  api:
+    build:
+      context: .
+      target: production
+    image: cyberguard/enterprise:2.0.0
+    container_name: cyberguard-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=cyberguard
+      - POSTGRES_USER=cyberguard
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+      - JWT_SECRET_KEY=${JWT_SECRET:-your-secret-key-change-in-production}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - cyberguard-network
+    command: python scripts/threat_api_server.py
+
+  # Mobile API Backend
+  mobile-api:
+    build:
+      context: .
+      target: production
+    image: cyberguard/enterprise:2.0.0
+    container_name: cyberguard-mobile-api
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      - FLASK_ENV=production
+      - REDIS_HOST=redis
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+    networks:
+      - cyberguard-network
+    command: python scripts/mobile_api.py
+
+  # Threat Monitor Service
+  monitor:
+    build:
+      context: .
+      target: production
+    image: cyberguard/enterprise:2.0.0
+    container_name: cyberguard-monitor
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=cyberguard
+      - POSTGRES_USER=cyberguard
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - cyberguard-network
+    privileged: true
+    command: python scripts/active_threat_monitor.py
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: cyberguard-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - cyberguard-network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-changeme}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: cyberguard-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=cyberguard
+      - POSTGRES_USER=cyberguard
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - cyberguard-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cyberguard"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: cyberguard-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - dashboard
+      - api
+      - mobile-api
+    networks:
+      - cyberguard-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+
+networks:
+  cyberguard-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
