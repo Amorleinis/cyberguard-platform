@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Enterprise Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <p>Initializing CyberGuard Platform...</p>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🛡️ CyberGuard</h1>
+                <p class="version">Enterprise v2.0</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="threats">
+                    <span class="icon">⚠️</span>
+                    <span>Threats</span>
+                    <span class="badge" id="threat-badge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <span class="icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-page="intelligence">
+                    <span class="icon">🔍</span>
+                    <span>Intelligence</span>
+                </a>
+                <a href="#" class="nav-item" data-page="protection">
+                    <span class="icon">🔒</span>
+                    <span>Protection</span>
+                </a>
+                <a href="#" class="nav-item" data-page="payments">
+                    <span class="icon">💳</span>
+                    <span>Payments</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">👤</div>
+                    <div class="user-details">
+                        <p class="user-name" id="user-name">Admin User</p>
+                        <p class="user-role">Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status" id="connection-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Connected</span>
+                    </div>
+                    <button class="icon-button" id="notifications-btn">
+                        🔔
+                        <span class="notification-badge" id="notification-badge">0</span>
+                    </button>
+                    <button class="icon-button" id="logout-btn">🚪</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page active">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Active Threats</p>
+                            <h3 class="stat-value" id="active-threats">0</h3>
+                            <p class="stat-change positive">↓ 12% from yesterday</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Threats Blocked</p>
+                            <h3 class="stat-value" id="blocked-threats">0</h3>
+                            <p class="stat-change positive">↑ 24% from yesterday</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💻</div>
+                        <div class="stat-info">
+                            <p class="stat-label">System Health</p>
+                            <h3 class="stat-value" id="system-health">100%</h3>
+                            <p class="stat-change">All systems operational</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🌐</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Network Traffic</p>
+                            <h3 class="stat-value" id="network-traffic">0 MB/s</h3>
+                            <p class="stat-change">Real-time monitoring</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Threat Timeline (Last 24 Hours)</h3>
+                        <canvas id="threat-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>System Resources</h3>
+                        <div class="resource-meters">
+                            <div class="meter">
+                                <label>CPU Usage</label>
+                                <div class="meter-bar">
+                                    <div class="meter-fill" id="cpu-meter" style="width: 45%"></div>
+                                </div>
+                                <span id="cpu-value">45%</span>
+                            </div>
+                            <div class="meter">
+                                <label>Memory Usage</label>
+                                <div class="meter-bar">
+                                    <div class="meter-fill" id="memory-meter" style="width: 62%"></div>
+                                </div>
+                                <span id="memory-value">62%</span>
+                            </div>
+                            <div class="meter">
+                                <label>Disk Usage</label>
+                                <div class="meter-bar">
+                                    <div class="meter-fill" id="disk-meter" style="width: 38%"></div>
+                                </div>
+                                <span id="disk-value">38%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Threats -->
+                <div class="recent-threats">
+                    <h3>Recent Threat Activity</h3>
+                    <div class="threat-list" id="threat-list">
+                        <div class="empty-state">
+                            <p>No recent threats detected. System is secure.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threats Page -->
+            <div id="page-threats" class="page">
+                <div class="page-header">
+                    <h3>Threat Monitor</h3>
+                    <div class="filters">
+                        <select id="threat-filter">
+                            <option value="all">All Threats</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="threats-grid" id="threats-grid">
+                    <div class="empty-state">
+                        <p>Loading threats...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="page-analytics" class="page">
+                <div class="page-header">
+                    <h3>Security Analytics</h3>
+                </div>
+                <div class="analytics-content">
+                    <p>Advanced analytics and reporting tools coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Intelligence Page -->
+            <div id="page-intelligence" class="page">
+                <div class="page-header">
+                    <h3>Threat Intelligence</h3>
+                </div>
+                <div class="intelligence-content">
+                    <p>Threat intelligence feed and analysis tools...</p>
+                </div>
+            </div>
+
+            <!-- Protection Page -->
+            <div id="page-protection" class="page">
+                <div class="page-header">
+                    <h3>Active Protection</h3>
+                </div>
+                <div class="protection-content">
+                    <div class="protection-toggles">
+                        <div class="toggle-item">
+                            <div>
+                                <h4>Real-time Protection</h4>
+                                <p>Continuously monitor and block threats</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked id="realtime-protection">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-item">
+                            <div>
+                                <h4>Network Monitoring</h4>
+                                <p>Monitor all network traffic for suspicious activity</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked id="network-monitoring">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-item">
+                            <div>
+                                <h4>File System Protection</h4>
+                                <p>Scan files for malware and threats</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked id="filesystem-protection">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Page -->
+            <div id="page-payments" class="page">
+                <div class="page-header">
+                    <h3>Subscription & Payments</h3>
+                </div>
+                <div class="payments-content">
+                    <div class="subscription-card">
+                        <h4>Current Plan</h4>
+                        <p class="plan-name">Enterprise Edition</p>
+                        <p class="plan-price">$199/month</p>
+                        <p class="plan-status active">Active</p>
+                        <button class="btn btn-primary">Manage Subscription</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="page-settings" class="page">
+                <div class="page-header">
+                    <h3>Settings</h3>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h4>API Configuration</h4>
+                        <div class="form-group">
+                            <label>Backend API URL</label>
+                            <input type="text" id="api-url" value="http://localhost:8000">
+                        </div>
+                        <button class="btn btn-primary" id="save-settings">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h2>🛡️ CyberGuard Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="admin@cyberguard.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="demo-note">Demo Mode: Any credentials will work</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
