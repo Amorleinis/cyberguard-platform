@@ -179,28 +179,60 @@ async def threat_stats():
 # Dashboard routes
 @api_v1_router.get("/dashboard")
 async def get_dashboard():
-    """Get dashboard overview"""
+    """Get dashboard overview with live system metrics"""
+    import psutil
+    import random
+    
+    # Get real system metrics if psutil is available
+    try:
+        cpu_usage = round(psutil.cpu_percent(interval=0.1), 1)
+        memory = psutil.virtual_memory()
+        memory_usage = round(memory.percent, 1)
+        disk = psutil.disk_usage('/')
+        disk_usage = round(disk.percent, 1)
+        network_traffic = round(random.uniform(50, 300), 1)
+    except:
+        # Fallback to simulated data
+        cpu_usage = round(random.uniform(30, 70), 1)
+        memory_usage = round(random.uniform(40, 80), 1)
+        disk_usage = round(random.uniform(20, 60), 1)
+        network_traffic = round(random.uniform(50, 300), 1)
+    
+    # Simulate dynamic threat counts
+    active_threats = random.randint(0, 15)
+    blocked_threats = random.randint(14800, 14900)
+    
     return {
+        "active_threats": active_threats,
+        "blocked_threats": blocked_threats,
+        "system_health": max(85, 100 - (active_threats * 2)),
+        "network_traffic": round(network_traffic / 100, 2),  # Convert to MB/s
+        "cpu_usage": int(cpu_usage),
+        "memory_usage": int(memory_usage),
+        "disk_usage": int(disk_usage),
+        "uptime": "12h 34m",
+        "last_scan": datetime.now().isoformat(),
         "overview": {
             "total_threats": 15234,
             "threats_today": 342,
-            "active_threats": 12,
-            "blocked_threats": 14891
+            "active_threats": active_threats,
+            "blocked_threats": blocked_threats
         },
         "realtime": {
-            "cpu_usage": 34.5,
-            "memory_usage": 42.1,
-            "network_traffic": 156.7,
-            "active_connections": 1247
+            "cpu_usage": cpu_usage,
+            "memory_usage": memory_usage,
+            "network_traffic": network_traffic,
+            "active_connections": random.randint(1200, 1300)
         },
         "recent_threats": [
             {
-                "id": "thr_000001",
-                "type": "malware",
-                "severity": "critical",
-                "source_ip": "192.168.1.100",
+                "id": f"thr_{i:06d}",
+                "type": random.choice(["malware", "phishing", "ddos", "ransomware"]),
+                "severity": random.choice(["critical", "high", "medium", "low"]),
+                "source_ip": f"192.168.1.{random.randint(1, 255)}",
                 "detected_at": datetime.now().isoformat()
             }
+            for i in range(1, 6)
         ]
     }
 
@@ -323,26 +355,52 @@ app.include_router(api_v1_router)
 # WebSocket endpoint for real-time threat updates
 @app.websocket("/ws/threats")
 async def websocket_threats(websocket: WebSocket):
+    import asyncio
+    import random
+    
     await manager.connect(websocket)
+    
+    # Threat types and severities for realistic simulation
+    threat_types = ["malware", "phishing", "ransomware", "ddos", "sql_injection", "xss_attack", "brute_force"]
+    severities = ["critical", "high", "medium", "low"]
+    statuses = ["detected", "blocked", "quarantined"]
+    
     try:
+        # Send initial connection confirmation
+        await manager.send_personal_message(json.dumps({
+            "type": "connection",
+            "message": "Connected to CyberGuard threat feed",
+            "timestamp": datetime.now().isoformat()
+        }), websocket)
+        
         while True:
-            # Send threat updates every 5 seconds
-            import asyncio
-            await asyncio.sleep(5)
+            # Send threat updates every 3-8 seconds (randomized for realism)
+            await asyncio.sleep(random.randint(3, 8))
+            
+            # Generate realistic threat data
+            threat_type = random.choice(threat_types)
+            severity = random.choice(severities)
             
             threat_update = {
-                "type": "threat_detected",
+                "type": "threat",
                 "threat": {
                     "id": f"thr_{int(datetime.now().timestamp())}",
-                    "type": "malware",
-                    "severity": "high",
-                    "source_ip": "192.168.1.100",
-                    "detected_at": datetime.now().isoformat()
+                    "type": threat_type.replace("_", " ").title(),
+                    "severity": severity,
+                    "status": random.choice(statuses),
+                    "source_ip": f"{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,255)}",
+                    "destination_port": random.choice([80, 443, 22, 3306, 5432, 8080]),
+                    "description": f"{threat_type.replace('_', ' ').title()} attempt detected and {random.choice(statuses)}",
+                    "timestamp": datetime.now().isoformat()
                 }
             }
             
             await manager.send_personal_message(json.dumps(threat_update), websocket)
+            
     except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception as e:
+        print(f"WebSocket error: {e}")
         manager.disconnect(websocket)
 
 # WebSocket endpoint for notifications
