@@ -10,6 +10,12 @@ import uvicorn
 from datetime import datetime
 import json
 
+from .core.database import Base, engine
+from .api import auth, threats, users
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
 # Create FastAPI app
 app = FastAPI(
     title="CyberGuard Enterprise Platform API",
@@ -27,6 +33,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include API routers
+app.include_router(auth.router)
+app.include_router(threats.router)
+app.include_router(users.router)
 
 # WebSocket connection manager
 class ConnectionManager:
