@@ -63,14 +63,16 @@ analysis = engine.analyze_cve(cve_data)
 
 ### Run the full platform locally
 - Use Python 3.11 and create a venv: `py -3.11 -m venv .venv`
-- Activate it: `.\.venv\Scripts\Activate.ps1`
-- Copy `.env.example` to `.env` and set secrets/DB/CORS as needed
+- Activate it: `\.\.venv\Scripts\Activate.ps1`
+- Copy `.env.example` to `.env` and set `SECRET_KEY`, `DATABASE_URL` (default SQLite, Postgres: `postgresql+psycopg2://cyberguard:cyberguard@db:5432/cyberguard`), and `CORS_ALLOW_ORIGINS`
 - Install backend deps: `pip install -r backend\requirements.txt`
 - Launch everything: `./start-platform.ps1` (backend at http://127.0.0.1:8000, web at http://localhost:3000)
+- Or run backend + Postgres with Docker Compose: `docker compose -f docker-compose.backend.yml up --build` (runs Alembic migrations automatically)
 
 ### Prepare admin and database
-- Set `DATABASE_URL` in `.env` (SQLite default; for Postgres use `postgresql+psycopg2://user:pass@host:5432/db`)
-- Seed admin user: `cd backend\scripts; ..\..\.venv\Scripts\python seed_admin.py`
+- Set `DATABASE_URL` in `.env` (SQLite default; Postgres recommended)
+- Seed admin user (local venv): `cd backend\scripts; ..\..\.venv\Scripts\python seed_admin.py`
+- Seed admin inside compose: `docker compose -f docker-compose.backend.yml exec backend python scripts/seed_admin.py`
 
 ---
 

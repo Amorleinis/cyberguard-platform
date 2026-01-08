@@ -28,6 +28,12 @@ This will automatically start:
 > ..\..\.venv\Scripts\python seed_admin.py
 > ```
 
+### Backend + Postgres via Docker Compose
+- Copy `.env.example` to `.env` and set `SECRET_KEY`, `DATABASE_URL` (e.g., `postgresql+psycopg2://cyberguard:cyberguard@db:5432/cyberguard`), `CORS_ALLOW_ORIGINS`
+- Bring up services: `docker compose -f docker-compose.backend.yml up --build`
+- Seed admin in container: `docker compose -f docker-compose.backend.yml exec backend python scripts/seed_admin.py`
+- Health: http://localhost:8000/health | Docs: http://localhost:8000/api/docs
+
 ## 📦 Individual Components
 
 ### Backend API
