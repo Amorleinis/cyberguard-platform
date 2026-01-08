@@ -9,7 +9,7 @@ from app.core.database import SessionLocal, Base, engine
 from app.core.security import get_password_hash, generate_api_key
 from app.models.database import User
 
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@cyberguard.com")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "lancxe.ceo@cyberguard.com")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "ChangeMe123!")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 
