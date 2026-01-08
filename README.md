@@ -1,6 +1,6 @@
 # CyberGuard Industries - Threat Intelligence Platform
 
-**Author:** Lance Brady & AI Collaboration  
+**Author:** Lance A. Brady & AI Collaboration  
 **License:** Apache 2.0  
 **Status:** Production Ready
 
