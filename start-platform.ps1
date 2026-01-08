@@ -3,7 +3,7 @@ Write-Host "Starting CyberGuard Enterprise Platform..." -ForegroundColor Cyan
 
 # Start Backend
 Write-Host "`n[1/3] Starting Backend API..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd backend\app; python main.py"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd backend; ..\.venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000"
 Start-Sleep -Seconds 3
 
 # Start Web

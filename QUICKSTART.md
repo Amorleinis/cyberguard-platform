@@ -13,12 +13,27 @@ This will automatically start:
 - ✅ Web Application (Dashboard)
 - ✅ Desktop Application (PyQt5)
 
+> Prereq: Use Python 3.11. Create and activate the venv, then copy `.env.example` to `.env` before the first run:
+> ```powershell
+> py -3.11 -m venv .venv
+> .\.venv\Scripts\Activate.ps1
+> copy .env.example .env
+> pip install -r backend\requirements.txt
+> pip install -r desktop\requirements.txt
+> ```
+
+> Optional: Seed an admin user (uses env vars ADMIN_EMAIL/ADMIN_PASSWORD):
+> ```powershell
+> cd backend\scripts
+> ..\..\.venv\Scripts\python seed_admin.py
+> ```
+
 ## 📦 Individual Components
 
 ### Backend API
 ```powershell
-cd backend/app
-python main.py
+cd backend
+..\.venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 - **URL**: http://localhost:8000
 - **Docs**: http://localhost:8000/api/docs

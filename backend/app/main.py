@@ -3,12 +3,19 @@ CyberGuard Enterprise Platform - FastAPI Backend
 Main application entry point
 """
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from dotenv import load_dotenv
+load_dotenv()
+
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
 from datetime import datetime
 import json
+import os
+
+from .api.auth import get_current_user
+from .models.database import User
 
 from .core.database import Base, engine
 from .api import auth, threats, users
@@ -26,9 +33,10 @@ app = FastAPI(
 )
 
 # CORS middleware
+allowed_origins = [origin.strip() for origin in os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:3000").split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -127,21 +135,21 @@ async def login(email: str, password: str):
     }
 
 @api_v1_router.get("/auth/me")
-async def get_current_user():
-    """Get current user info"""
+async def get_current_user_demo(current_user: User = Depends(get_current_user)):
+    """Get current user info (demo payload)"""
     return {
-        "id": "usr_demo123",
-        "email": "user@example.com",
-        "name": "Demo User",
-        "role": "user",
-        "subscription": "professional",
-        "created_at": "2025-01-01T00:00:00Z"
+        "id": current_user.id,
+        "email": current_user.email,
+        "name": current_user.full_name or current_user.username,
+        "role": "admin" if current_user.is_superuser else "user",
+        "subscription": current_user.subscription_plan,
+        "created_at": current_user.created_at.isoformat()
     }
 
 # Threat routes
 @api_v1_router.get("/threats")
-async def list_threats(limit: int = 10, offset: int = 0):
-    """List detected threats"""
+async def list_threats(limit: int = 10, offset: int = 0, current_user: User = Depends(get_current_user)):
+    """List detected threats (demo data)"""
     threats = []
     for i in range(limit):
         threats.append({
@@ -162,8 +170,8 @@ async def list_threats(limit: int = 10, offset: int = 0):
     }
 
 @api_v1_router.get("/threats/stats")
-async def threat_stats():
-    """Get threat statistics"""
+async def threat_stats(current_user: User = Depends(get_current_user)):
+    """Get threat statistics (demo data)"""
     return {
         "total_threats": 15234,
         "threats_today": 342,
@@ -189,8 +197,8 @@ async def threat_stats():
 
 # Dashboard routes
 @api_v1_router.get("/dashboard")
-async def get_dashboard():
-    """Get dashboard overview with live system metrics"""
+async def get_dashboard(current_user: User = Depends(get_current_user)):
+    """Get dashboard overview with live system metrics (demo data)"""
     import psutil
     import random
     
@@ -460,7 +468,7 @@ if __name__ == "__main__":
     print("="*70 + "\n")
     
     uvicorn.run(
-        "main:app",
+        "app.main:app",
         host="0.0.0.0",
         port=8000,
         reload=True,
